@@ -1,19 +1,13 @@
-const express = require("express");
-const cors = require("cors");
-const fetch = require("node-fetch");
+import express from "express";
+import cors from "cors";
+import fetch from "node-fetch";
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Server is running!");
-});
-app.get("/APIENDPOINT", (req, res) => {
-  res.send("APIENDPOINT");
-});
 app.get("/api/InfoStealer/username", async (req, res) => {
   const { username } = req.query;
   console.log("inside get info", username);
@@ -93,6 +87,7 @@ app.get("/api/Callspy", async (req, res) => {
 });
 app.get("/api/Linkedin/lookup", async (req, res) => {
   const { url, apikey } = req.query;
+  // console.log("apikey:", apikey);
   if (!url || !apikey) {
     return res.status(400).json({ error: "Both url and apikey parameters are required" });
   }
@@ -121,6 +116,7 @@ app.get("/api/Linkedin/lookup", async (req, res) => {
 });
 
 app.get("/api/Mail2Linkedin", async (req, res) => {
+  // const apiKey = import.meta.env.VITE_LINKEDIN_API_KEY;
   const { email, apikey } = req.query;
   console.log("inside get info", email);
   if (!email) {
@@ -256,9 +252,12 @@ app.get("/api/Social", async (req, res) => {
   }
 });
 
+// Serve static files in production
+app.use(express.static(path.join(__dirname, "build")));
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
-module.exports = app; // Export the app for testing purposes
